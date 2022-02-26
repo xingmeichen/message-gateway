@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: ms-gateway
+  datasource:
+    url: jdbc:mysql://localhost:3306/msgateway
+    username: root
+    password: 20190228
+    driver-class-name: com.mysql.jdbc.Driver
+
+server:
+  port: 8010
+
+mybatis:
+  configLcation: classpath:mybatis.xml
+  type-aliases-package: com.mabel.pojo
+  mapperLacation: classpath:mapper
+
+sms:
+  baseUrl: "http://localhost:8002"
+  sendSms: "/v2/emp/templateSms/sendSms"
+  reset: "/v2/emp/templateSms/reset"
+  currentStatus: "/v2/emp/templateSms/currentStatus"
