@@ -8,6 +8,8 @@ import com.mabel.pojo.vo.SmsVO;
 import com.mabel.service.MessageService;
 import com.mabel.service.SmsService;
 import com.mabel.utils.RedisKey;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,8 @@ import java.util.concurrent.TimeUnit;
  **/
 @Service
 public class MessageServiceImpl implements MessageService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MessageServiceImpl.class);
 
     @Autowired
     private RedisTemplate redisTemplate;
@@ -67,16 +71,15 @@ public class MessageServiceImpl implements MessageService {
                  */
                 recordTel(smsRO.getAcceptor_tel());
                 recordRate(smsRO.getAcceptor_tel(), 1);
+                LOGGER.info("Send SMS Success!!!");
                 return CommonError.SUCCESS.getErrorCode();
             }
             case "400": {
                 return CommonError.WRONG_PARAMETER.getErrorCode();
             }
             case "409": case "429": {
-                if (isAbleToSend(smsRO.getAcceptor_tel())) {
-                    // 如果是被短信平台限制调用接口，则主动限制3秒内不能发送请求
-                    recordRate("", 3);
-                }
+                // 如果是被短信平台限制调用接口，则主动限制3秒内不能发送请求
+                recordRate("", 10);
                 return CommonError.SYSTEM_ERROR.getErrorCode();
             }
             default:{
@@ -139,7 +142,7 @@ public class MessageServiceImpl implements MessageService {
         String host = serverInfoConfiguration.getHost();
         String port = serverInfoConfiguration.getPort();
         Set keys = redisTemplate.keys(RedisKey.smsRateKeyPattern(host, port));
-        if (null != null && 10 < keys.size()) {
+        if (null != keys && 10 < keys.size()) {
             return false;
         }
         return true;
