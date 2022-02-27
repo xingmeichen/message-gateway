@@ -44,7 +44,7 @@ public class UserController {
         try {
             if (bindingResult.hasErrors()) {
                 String errorMessage = bindingResult.getFieldError().getDefaultMessage();
-                return ResponseEntity.wrongParam(errorMessage);
+                return ResponseEntity.wrongParam("请求参数错误: " + errorMessage);
             }
             Integer code = userServiceImpl.register(registerRO);
             if (code == CommonError.DUPLICATE_USER_NAME.getErrorCode()) {

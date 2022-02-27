@@ -14,6 +14,8 @@ public enum CommonResponse {
     SUCCESS(200, "success"),
     WRONG_PARAMETER(400, "请求参数错误"),
     NO_AUTH(403, "禁止未经授权访问"),
+    CONFLICT(409, "请勿频繁操作"),
+    TOO_MANY_REQUESTS(429, "请勿频繁操作"),
     INTERNAL_SYSTEM_ERROR(500, "内部服务器错误");
 
     private Integer code;

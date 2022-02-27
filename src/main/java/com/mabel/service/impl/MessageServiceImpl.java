@@ -80,7 +80,7 @@ public class MessageServiceImpl implements MessageService {
             case "409": case "429": {
                 // 如果是被短信平台限制调用接口，则主动限制3秒内不能发送请求
                 recordRate("", 10);
-                return CommonError.SYSTEM_ERROR.getErrorCode();
+                return CommonError.TOO_MANY_REQUESTS.getErrorCode();
             }
             default:{
                 return CommonError.SYSTEM_ERROR.getErrorCode();

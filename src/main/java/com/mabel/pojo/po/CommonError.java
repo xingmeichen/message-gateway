@@ -24,7 +24,9 @@ public enum CommonError {
     NO_SESSION(-5, "Session ID不存在", CommonResponse.WRONG_PARAMETER),
     WRONG_SESSION(-6, "Session ID错误", CommonResponse.WRONG_PARAMETER),
     NO_AUTH(-7, "禁止未经授权访问", CommonResponse.NO_AUTH),
-    WRONG_PARAMETER(-8, "参数错误", CommonResponse.WRONG_PARAMETER);
+    WRONG_PARAMETER(-8, "参数错误", CommonResponse.WRONG_PARAMETER),
+    CONFLICT(-9, "客户端调用频率过高，当前处于限流中", CommonResponse.CONFLICT),
+    TOO_MANY_REQUESTS(-10, "达到调用频率", CommonResponse.TOO_MANY_REQUESTS);
 
     private Integer errorCode;
     private String errorMsg;
