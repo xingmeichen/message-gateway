@@ -6,6 +6,7 @@ import com.mabel.pojo.po.CommonResponse;
 import com.mabel.pojo.ro.MessageRO;
 import com.mabel.pojo.vo.ResponseEntity;
 import com.mabel.service.MessageService;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ import javax.validation.constraints.Pattern;
  * @create: 2022-02-26
  **/
 @RestController
+@Validated
 public class MessageController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
@@ -34,22 +36,19 @@ public class MessageController {
     private MessageService messageServiceImpl;
 
     @PostMapping("/directmessage")
-    public ResponseEntity directMessage(@Validated
+    public ResponseEntity directMessage(@NotBlank(message = "手机号不能为空")
+//                                        @Pattern(regexp = "^(((13[0-9])|(14[579])|(15([0-3]|[5-9]))|(16[6])|(17[0135678])|(18[0-9])|(19[89]))\\d{8})$", message = "手机号格式错误")
                                         @RequestParam(name = "tels")
-                                        @NotBlank(message = "手机号不能为空")
-                                        @Pattern(regexp = "^(((13[0-9])|(14[579])|(15([0-3]|[5-9]))|(16[6])|(17[0135678])|(18[0-9])|(19[89]))\\d{8})$", message = "手机号格式错误")
                                                 String tels,
-                                        @Validated
+                                        @Pattern(regexp = "[1|2|3]{1}", message = "消息优先级只能是1，2，3中的任意一个")
                                         @RequestParam(name = "qos")
-                                        @Pattern(regexp = "(1|2|3)", message = "消息优先级只能是1，2，3中的任意一个")
                                                 String qos,
-                                        @Validated
-                                        @RequestParam(name = "userName")
                                         @Pattern(regexp = "[a-zA-Z\\d]{3,32}", message = "非法用户")
+                                        @RequestParam(name = "userName")
                                                 String userName,
-                                        @Validated
-                                        @RequestParam(name = "sessionId") String sessionId,
                                         @NotBlank(message = "会话ID不能为空")
+                                        @RequestParam(name = "sessionId")
+                                                String sessionId,
                                         @Validated @RequestBody MessageRO msgRO, BindingResult bindingResult) {
         try {
             if (bindingResult.hasErrors()) {
@@ -58,10 +57,7 @@ public class MessageController {
             }
             MessageDTO dto = MessageDTO.parseMessageDTO(tels, qos, userName, sessionId, msgRO);
             Integer code = messageServiceImpl.directMessage(dto);
-            if (code < 0) {
-                return ResponseEntity.parseResponse(CommonError.getEnumByCode(code));
-            }
-            return ResponseEntity.success();
+            return ResponseEntity.parseResponse(CommonError.getEnumByCode(code));
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
             return ResponseEntity.parseResponse(CommonResponse.INTERNAL_SYSTEM_ERROR);

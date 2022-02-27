@@ -14,11 +14,6 @@ import java.util.Map;
 public class SmsStatusVO extends SmsVO {
 
     /***
-     * 错误码，成功返回0
-     */
-    private String res_code;
-
-    /***
      * 优先级消息发送成功统计图，keyName = qos级别，string类型；value long类型。
      */
     private Map<String, Long> qosSuccessMap;

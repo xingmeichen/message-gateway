@@ -4,6 +4,7 @@ import com.mabel.pojo.ro.MessageRO;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 
 /**
@@ -27,6 +28,8 @@ public class MessageDTO {
 
     @NotBlank(message = "会话ID不能为空")
     private String sessionId;
+
+    @Transient
     private MessageRO messageRO;
 
     public static MessageDTO parseMessageDTO(String tel, String qos, String userName, String sessionId,  MessageRO msgRO) {

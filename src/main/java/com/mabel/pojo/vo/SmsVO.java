@@ -15,6 +15,12 @@ public class SmsVO {
      * 错误码，成功返回0
      */
     private String res_code;
+
+    /***
+     * 错误消息，成功返回Success
+     */
+    private String message;
+
     /***
      * 错误消息，成功返回Success
      */

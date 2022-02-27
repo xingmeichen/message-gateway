@@ -18,12 +18,13 @@ public enum CommonError {
 
     SUCCESS(0, "success", CommonResponse.SUCCESS),
     SYSTEM_ERROR(-1, "系统错误", INTERNAL_SYSTEM_ERROR),
-    DUPLICATE_USER_NAME(-2, "用户已经存在", WRONG_PARAMETER),
-    NO_USER(-3, "用户不存在", WRONG_PARAMETER),
-    WRONG_PASSWORD(-4, "密码错误", WRONG_PARAMETER),
-    NO_SESSION(-5, "Session ID不存在", WRONG_PARAMETER),
-    WRONG_SESSION(-6, "Session ID错误", WRONG_PARAMETER),
-    NO_AUTH(-7, "禁止未经授权访问", CommonResponse.NO_AUTH);
+    DUPLICATE_USER_NAME(-2, "用户已经存在", CommonResponse.WRONG_PARAMETER),
+    NO_USER(-3, "用户不存在", CommonResponse.WRONG_PARAMETER),
+    WRONG_PASSWORD(-4, "密码错误", CommonResponse.WRONG_PARAMETER),
+    NO_SESSION(-5, "Session ID不存在", CommonResponse.WRONG_PARAMETER),
+    WRONG_SESSION(-6, "Session ID错误", CommonResponse.WRONG_PARAMETER),
+    NO_AUTH(-7, "禁止未经授权访问", CommonResponse.NO_AUTH),
+    WRONG_PARAMETER(-8, "参数错误", CommonResponse.WRONG_PARAMETER);
 
     private Integer errorCode;
     private String errorMsg;

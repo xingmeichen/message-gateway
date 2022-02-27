@@ -14,8 +14,17 @@ import com.mabel.pojo.vo.SmsVO;
  **/
 public interface SmsService {
 
+    /***
+     * 调用短信平台发送短信
+     * @param smsRO
+     * @return
+     */
     SmsVO sendSms(SmsRO smsRO);
 
+    /***
+     *
+     * @return
+     */
     SmsVO reset();
 
     SmsVO currentStatus();
