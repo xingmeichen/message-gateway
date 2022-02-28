@@ -7,7 +7,7 @@ spring:
     port: 6379
 
 server:
-  port: 8010
+  port: 8081
 
 sms:
   baseUrl: "http://mock-sms-server:8080"

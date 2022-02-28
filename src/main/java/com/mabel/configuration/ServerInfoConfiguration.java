@@ -27,9 +27,6 @@ public class ServerInfoConfiguration {
             return this.host;
         }
         try {
-            InetAddress loopbackAddress = InetAddress.getLoopbackAddress();
-            String hostAddress = loopbackAddress.getHostAddress();
-            InetAddress localHost = InetAddress.getLocalHost();
             this.host = InetAddress.getLocalHost().getHostAddress();
         } catch (UnknownHostException e) {
             System.out.println("Get Host error: " + e.getMessage());
