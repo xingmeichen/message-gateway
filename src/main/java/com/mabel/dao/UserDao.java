@@ -1,32 +1,38 @@
 package com.mabel.dao;
 
-import com.mabel.mapper.UserMapper;
 import com.mabel.pojo.model.User;
+import com.mabel.utils.RedisKey;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import tk.mybatis.mapper.entity.Example;
 
 /**
  * @project: message-gateway
- * @description: User 数据库层 Service
+ * @description: 用户信息持久化 Service
  * @author: Mabel.Chen
- * @create: 2022-02-26
+ * @create: 2022-02-28
  **/
 @Service
 public class UserDao {
 
     @Autowired
-    private UserMapper userMapper;
+    private RedisTemplate redisTemplate;
 
-    public User selectUserByUserName(String userName) {
-        Example example = new Example(User.class);
-        example.createCriteria().andEqualTo("userName", userName);
-        return userMapper.selectOneByExample(example);
+    public boolean addUser(User user) {
+        redisTemplate.opsForValue().set(RedisKey.userKey(user.getUserName()), user.getPassword());
+        return true;
     }
 
-    public User insertSelective(User user) {
-        user.setId(null);
-        userMapper.insertSelective(user);
+    public User queryUserByUserName(String userName) {
+        if (!isUserExist(userName)) {
+            return null;
+        }
+        String password = (String) redisTemplate.opsForValue().get(RedisKey.userKey(userName));
+        User user = new User(userName, password);
         return user;
+    }
+
+    public boolean isUserExist(String userName) {
+        return redisTemplate.hasKey(RedisKey.userKey(userName));
     }
 }

@@ -1,22 +1,16 @@
 spring:
   application:
-    name: ms-gateway
-  datasource:
-    url: jdbc:mysql://localhost:3306/msg_gateway
-    username: root
-    password: bac123456
-    driver-class-name: com.mysql.jdbc.Driver
+    name: msg-gateway
+  redis:
+    database: 0
+    host: redis
+    port: 6379
 
 server:
   port: 8010
 
-mybatis:
-  configLcation: classpath:mybatis.xml
-  type-aliases-package: com.mabel.pojo
-  mapperLacation: classpath:mapper
-
 sms:
-  baseUrl: "http://localhost:8002"
+  baseUrl: "http://mock-sms-server:8080"
   sendSms: "/v2/emp/templateSms/sendSms"
   reset: "/v2/emp/templateSms/reset"
   currentStatus: "/v2/emp/templateSms/currentStatus"

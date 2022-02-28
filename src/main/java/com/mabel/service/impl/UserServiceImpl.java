@@ -8,6 +8,7 @@ import com.mabel.pojo.ro.UserLoginRO;
 import com.mabel.pojo.ro.UserLogoutRO;
 import com.mabel.pojo.ro.UserRegisterRO;
 import com.mabel.service.UserService;
+import com.mabel.utils.RedisKey;
 import com.mabel.utils.UserUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,17 +48,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public Integer register(UserRegisterRO registerRO) {
         try {
-            User user = userDao.selectUserByUserName(registerRO.getUserName());
+            User user = userDao.queryUserByUserName(registerRO.getUserName());
             if (null != user) {
                 // 用户名已经存在，不允许注册
                 LOGGER.info("existing user: " + registerRO.getUserName());
                 return CommonError.DUPLICATE_USER_NAME.getErrorCode();
             }
-            user = new User();
-            user.setUserName(registerRO.getUserName());
-            user.setPassword(UserUtils.encryptPassword(registerRO.getPassword()));
-            userDao.insertSelective(user);
-            return user.getId();
+            user = new User(registerRO.getUserName(), UserUtils.encryptPassword(registerRO.getPassword()));
+            userDao.addUser(user);
+            return CommonError.SUCCESS.getErrorCode();
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
             return CommonError.SYSTEM_ERROR.getErrorCode();
@@ -66,13 +65,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Integer login(UserLoginRO loginRO, String sessionId) {
-        User user = null;
-        try {
-            user = userDao.selectUserByUserName(loginRO.getUserName());
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage());
-            CommonError.SYSTEM_ERROR.getErrorMsg();
-        }
+        User user = userDao.queryUserByUserName(loginRO.getUserName());;
         if (null == user) {
             // 通过用户名查询不到用户，说明用户不存在
             return CommonError.NO_USER.getErrorCode();
@@ -81,18 +74,19 @@ public class UserServiceImpl implements UserService {
         if (!success) {
             return CommonError.WRONG_PASSWORD.getErrorCode();
         }
-        redisTemplate.opsForValue().set("sessionId:" + user.getUserName(), sessionId, 1 * 24, TimeUnit.HOURS);
+        // 保存session ID
+        redisTemplate.opsForValue().set(RedisKey.sessionKey(loginRO.getUserName()), sessionId, 1 * 24, TimeUnit.HOURS);
         return CommonResponse.SUCCESS.getCode();
     }
 
     @Override
     public Integer logout(UserLogoutRO logoutRO) {
-        String key = new StringBuffer("sessionId:").append(logoutRO.getUserName()).toString();
+        String key = RedisKey.sessionKey(logoutRO.getUserName());
         if (!redisTemplate.hasKey(key)) {
             // 用户不存在
             return CommonError.NO_USER.getErrorCode();
         }
-        String sessionId = (String) redisTemplate.opsForValue().get("sessionId:" + logoutRO.getUserName());
+        String sessionId = (String) redisTemplate.opsForValue().get(key);
         if (!logoutRO.getSessionId().equals(sessionId)) {
             return CommonError.WRONG_SESSION.getErrorCode();
         }

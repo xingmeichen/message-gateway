@@ -1,7 +1,9 @@
 package com.mabel.pojo.ro;
 
-import com.sun.istack.internal.NotNull;
 import lombok.Data;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 
 /**
  * @project: message-gateway
@@ -12,8 +14,8 @@ import lombok.Data;
 @Data
 public class UserLogoutRO {
 
-    @NotNull
+    @Pattern(regexp = "[a-zA-Z\\d]{3,32}", message = "请求参数错误")
     private String userName;
-    @NotNull
+    @NotBlank(message = "请求参数错误")
     private String sessionId;
 }

@@ -1,7 +1,6 @@
 package com.mabel.service;
 
 import com.mabel.pojo.ro.SmsRO;
-import com.mabel.pojo.vo.SmsStatusVO;
 import com.mabel.pojo.vo.SmsVO;
 
 /**

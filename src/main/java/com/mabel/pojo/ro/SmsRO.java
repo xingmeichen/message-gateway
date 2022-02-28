@@ -1,6 +1,5 @@
 package com.mabel.pojo.ro;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.mabel.pojo.dto.MessageDTO;
 import com.mabel.utils.ZonedDateUtil;
 import lombok.Data;

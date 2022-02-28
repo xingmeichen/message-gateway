@@ -4,7 +4,7 @@ import lombok.Getter;
 
 import java.util.Arrays;
 
-import static com.mabel.pojo.po.CommonResponse.*;
+import static com.mabel.pojo.po.CommonResponse.INTERNAL_SYSTEM_ERROR;
 
 /**
  * @project: message-gateway
