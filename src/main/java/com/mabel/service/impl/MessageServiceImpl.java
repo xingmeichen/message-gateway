@@ -41,7 +41,7 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public Integer directMessage(MessageDTO msgDTO) {
-        String key = new StringBuffer("sessionId:").append(msgDTO.getUserName()).toString();
+        String key = RedisKey.sessionKey(msgDTO.getUserName());
         if (!redisTemplate.hasKey(key)) {
             // 用户不存在或者未经授权
             return CommonError.NO_AUTH.getErrorCode();
