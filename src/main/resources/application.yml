@@ -3,14 +3,14 @@ spring:
     name: msg-gateway
   redis:
     database: 0
-    host: redis
+    host: localhost
     port: 6379
 
 server:
   port: 8081
 
 sms:
-  baseUrl: "http://mock-sms-server:8080"
+  baseUrl: "http://localhost:8080"
   sendSms: "/v2/emp/templateSms/sendSms"
   reset: "/v2/emp/templateSms/reset"
   currentStatus: "/v2/emp/templateSms/currentStatus"
