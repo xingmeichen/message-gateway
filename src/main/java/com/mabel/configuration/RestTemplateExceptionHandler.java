@@ -10,7 +10,7 @@ import java.io.IOException;
 
 /**
  * @project: message-gateway
- * @description:
+ * @description: 自定义restTemplate 异常处理器
  * @author: Mabel.Chen
  * @create: 2022-02-27
  **/
